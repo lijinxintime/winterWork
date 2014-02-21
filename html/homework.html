@@ -1,0 +1,546 @@
+<!DOCTYPE PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>my homework</title>
+	<link rel="stylesheet" type="text/css" href="../stylesheet/style.css">
+	<script type="text/javascript" src="../js/cont_Move.js"></script>
+	<script type="text/javascript">
+	window.onload = function(){
+		//关闭欢迎界面
+		welcome();
+		//打开表单
+		var oSwith = document.getElementById('message');
+		oSwith.onclick = function(){
+			starChange(oSwith,{left:-50},function(){
+				starHtml();
+			});
+		};
+		//关闭表单
+		var oFf = document.getElementById('end_form');
+		oFf.onclick = function(){
+			endHtml();
+		};
+		chkMe();
+		slectAll()
+	};
+	//开始表单
+	function starHtml(){
+		var oForm = document.getElementById('form');
+		move(oForm,function(){
+			starJump(oForm);
+			starForm();
+
+		})
+	};
+	//关闭表单
+	function endHtml(){
+		var oForm = document.getElementById('form');
+		var oSwith = document.getElementById('message');
+		starChange(oForm,{left:-1500,top:70},function(){
+		    starChange(oSwith,{left:0})
+		});
+	};
+	//表单里面的
+	function starForm(){
+		var oName = document.getElementById('name_frame');
+		var oNbt = oName.getElementsByTagName('h4')[0];
+		var oNpt = oName.getElementsByTagName('input')[0];
+		var oAge = document.getElementById('age_fame');
+		var oAbt = oAge.getElementsByTagName('h4')[0];
+		var oApt = oAge.getElementsByTagName('input')[0];
+		var oQq = document.getElementById('qq_frame');
+		var oQbt = oQq.getElementsByTagName('h4')[0];
+		var oQpt = oQq.getElementsByTagName('input')[0];
+		var oLove = document.getElementById('own_love');
+		var oLbt = oLove.getElementsByTagName('h4')[0];
+		var oLpt = oLove.getElementsByTagName('ul')[0];
+		var oInfor = document.getElementById('own_infor');
+		var oIbt = oInfor.getElementsByTagName('h4')[0];
+		var oIpt = oInfor.getElementsByTagName('textarea')[0];
+		var oMust;
+		if (document.getElementsByClassName('must_select')) {
+			oMust = document.getElementsByClassName('must_select')
+		}
+		else{
+			oMust = getElementsByClassName('p','must_select')
+		};
+		function oBtappear(obj,fn){
+			obj.style.display = 'block'
+			if (fn) {
+				fn();
+			};
+		};
+		oBtappear(oNbt,function(){
+			oBtappear(oNpt);
+			starElast(oNpt,'width',250,function(){
+				oMust[0].style.display = 'block';
+				oBtappear(oAbt,function(){
+					oBtappear(oApt);
+					starElast(oApt,'width',250,function(){
+						oMust[1].style.display = 'block';
+						oBtappear(oQbt,function(){
+							oBtappear(oQpt);
+							starElast(oQpt,'width',250,function(){
+								oMust[2].style.display = 'block';
+								oBtappear(oLbt,function(){
+									oBtappear(oLpt);
+									starElast(oLpt,'left',60,function(){
+										oBtappear(oIbt,function(){
+											oBtappear(oIpt);
+											starElast(oIpt,'width',216,function(){
+												starElast(oIpt,'height',94)
+											});
+										});
+									});
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+	};
+	//避免兼容性问题（getByClassName)
+	function getElementsByClassName(tagName,classObj){
+		var oTagName = document.getElementsByTagName(tagName);
+		var oArr = [];
+		for (var i = 0; i < oTagName.length; i++) {
+			if (oTagName[i].className == classObj) {
+				oArr.push(oTagName[i]);
+			};
+		};
+		return oArr;
+	}
+	function starJump (obj) {
+		var iSpeedX = 0;
+		var iSpeedY = 0;
+		var lastX = 0;
+		var lastY = 0;
+		obj.onmousedown = function(ev){
+			var oEvent = ev || event;
+			var disX = oEvent.clientX - obj.offsetLeft;
+			var disY = oEvent.clientY - obj.offsetTop;
+			document.onmousemove = function(ev){
+				var oEvent = ev || event;
+				var opsX = oEvent.clientX - disX;
+				var opsY = oEvent.clientY - disY;
+				obj.style.left = opsX + 'px';
+				obj.style.top = opsY + 'px';
+				iSpeedX = opsX - lastX;
+				iSpeedY = opsY - lastY;
+				lastX = opsX;
+				lastY = opsY;
+			};
+			document.onmouseup = function(){
+				document.onmousemove = null;
+				document.onmouseup = null;
+				starMove(obj);
+			};
+			clearInterval(obj.timer)
+		};
+		function starMove(obj){
+			clearInterval(obj.timer);
+			obj.timer = setInterval(function(){
+				iSpeedY += 3;
+				var l = obj.offsetLeft + iSpeedX;
+				var t = obj.offsetTop + iSpeedY;
+				if (t >= (document.documentElement.clientHeight || document.body.clientHeight) - obj.offsetHeight) {
+				    iSpeedY *= -0.8;
+				    iSpeedX *= 0.8;
+				    t = (document.documentElement.clientHeight || document.body.clientHeight) - obj.offsetHeight
+			    }
+			    else if (t <= 0) {
+				    iSpeedY *= -1;
+				    iSpeedX *= 0.8;
+				    t = 0;
+			    };
+			    if (l >= (document.documentElement.clientWidth || document.body.clientWidth) - obj.offsetWidth) {
+				    iSpeedX *= -0.8;
+				    l= (document.documentElement.clientWidth || document.body.clientWidth) - obj.offsetWidth;
+			    }
+			    else if(l <= 0){
+				    iSpeedX *= -0.8;
+				    l = 0;
+			    };
+			    if (Math.abs(iSpeedX) < 1) {
+		    	    iSpeedX = 0;
+		        };
+		        if (Math.abs(iSpeedY) <1 ) {
+		    	   iSpeedY = 0;
+		        };
+		        if (iSpeedX == 0 && iSpeedY ==0) {
+		        	clearInterval(obj.timer)
+		        };
+				obj.style.left = l + 'px';
+				obj.style.top = t + 'px';
+			},30);
+		};
+	};
+	function getStyleValue(obj,attr){
+		if (obj.currentStyle) {
+			return obj.currentStyle[attr]
+		}
+		else{
+			return getComputedStyle(obj,false)[attr]
+		}
+	};
+	function starChange(obj,json,fn){
+		clearInterval(obj.timer);
+		obj.timer = setInterval(function(){
+			var attr;
+			for(attr in json){
+				var theValue = parseInt(getStyleValue(obj,attr));
+				if (attr == 'opacity') {
+					theValue = parseInt(parseFloat(getStyleValue(obj,attr)*100));
+				};
+				var iSpeed = (json[attr] - theValue)/20;
+				iSpeed = iSpeed > 0 ? Math.ceil(iSpeed):Math.floor(iSpeed);
+				if (theValue == json[attr]) {
+					clearInterval(obj.timer);
+					if (fn) {
+						fn();
+					};
+				}
+				else{
+					if (attr == 'opacity') {
+						obj.style.opacity = (theValue + iSpeed)/100;
+						obj.style.filter = 'alpha(opacity:'+(theValue + iSpeed)+')'
+					}
+					else{
+						obj.style[attr] = theValue + iSpeed +'px'
+					};
+				};
+			};
+		},30)
+	};
+	//此处函数重复，我实在不能解决上面的问题了。。
+	function move (obj,fn) {
+		var iSpeedX = 12;
+	    var iSpeedY = 6;
+		obj.timer = setInterval(function(){
+			iSpeedY += 3;
+			var l = obj.offsetLeft + iSpeedX;
+		    var t = obj.offsetTop + iSpeedY;
+		    if (t >= (document.documentElement.clientHeight || document.body.clientHeight) - obj.offsetHeight) {
+				iSpeedY *= -0.8;
+				iSpeedX *= 0.8;
+				t = (document.documentElement.clientHeight || document.body.clientHeight) - obj.offsetHeight
+			}
+			else if (t <= 0) {
+				iSpeedY *= -1;
+				iSpeedX *= 0.8;
+				t = 0;
+			};
+			if (l >= (document.documentElement.clientWidth || document.body.clientWidth) - obj.offsetWidth) {
+				iSpeedX *= -0.8;
+				l= (document.documentElement.clientWidth || document.body.clientWidth) - obj.offsetWidth;
+			}
+			else if(l <= 0){
+				iSpeedX *= -0.8;
+				l = 0;
+			};
+			if (Math.abs(iSpeedX) < 1) {
+		    	iSpeedX = 0;
+		    };
+		    if (Math.abs(iSpeedY) <1 ) {
+		    	iSpeedY = 0;
+		    };
+		    if (Math.abs(iSpeedX) < 1) {
+		    	iSpeedX = 0;
+		    };
+		    if (Math.abs(iSpeedY) <1 ) {
+		    	iSpeedY = 0;
+		    };
+			obj.style.left = l + 'px';
+			obj.style.top = t + 'px';
+			if (iSpeedX == 0 && iSpeedY == 0) {
+				clearInterval(obj.timer);
+				fn()
+			};
+		},30)
+	};
+	function starElast(obj,attr,target,fn){
+		var iSpeed = 0;
+		var replaceValue = 0;
+		clearInterval(obj.timer);
+		obj.timer = setInterval(function(){
+			iSpeed += (target - parseInt(getStyleValue(obj,attr)))/5;
+			iSpeed *= 0.7;
+			if(Math.abs(target - parseInt(getStyleValue(obj,attr))) < 1 && Math.abs(iSpeed) < 1){
+				clearInterval(obj.timer);
+				obj.style[attr] = target + 'px';
+				if (fn) {
+					fn();
+				};
+			}
+			else{
+				replaceValue +=  iSpeed;
+				obj.style[attr] = replaceValue +'px'
+			}
+		},30)
+	};
+	function chkMe(){
+		var oNa = document.getElementById('name_frame');
+		var oName = oNa.getElementsByTagName('input')[0];
+		var oNerr = oNa.getElementsByTagName('p')[0];
+		var oAg = document.getElementById('age_fame');
+		var oAge = oAg.getElementsByTagName('input')[0];
+		var oAerr = oAg.getElementsByTagName('p')[0];
+		var oQ = document.getElementById('qq_frame');
+		var oQq = oQ.getElementsByTagName('input')[0];
+		var oQerr = oQ.getElementsByTagName('p')[0];
+		var oBtn = document.getElementById('comfirm_all');
+		oName.onblur = function(){
+			var nameRegXp = /^\w{4,8}$/gi;
+			if (nameRegXp.test(oName.value)) {
+				oNerr.style.display = 'none';
+			}
+			else{
+				oNerr.style.display = 'block';
+				starChange(oNerr,{opacity:200})
+			}
+		};
+		oAge.onblur = function(){
+			var nameRegXp = /^\w{6,12}$/gi;
+			if (nameRegXp.test(oAge.value)) {
+				oAerr.style.display = 'none';
+			}
+			else{
+				oAerr.style.display = 'block';
+				starChange(oAerr,{opacity:200})
+			}
+		};
+		oQq.onblur = function(){
+			var nameRegXp = /^\w+@[a-z0-9]+.\w{2,5}$/g;
+			if (nameRegXp.test(oQq.value)) {
+				oQerr.style.display = 'none';
+			}
+			else{
+				oQerr.style.display = 'block';
+				starChange(oQerr,{opacity:200})
+			};
+		};
+	};
+	//全选框架
+	function slectAll(){
+		var oNa = document.getElementById('name_frame');
+		var oName = oNa.getElementsByTagName('input')[0];
+		var oAg = document.getElementById('age_fame');
+		var oAge = oAg.getElementsByTagName('input')[0];
+		var oQ = document.getElementById('qq_frame');
+		var oQq = oQ.getElementsByTagName('input')[0];
+		var allBtn = document.getElementById('sect_all');
+		var allSelect = document.getElementById('love_select');
+		var allClick = allSelect.getElementsByTagName('input');
+		var oConfirm = document.getElementById('comfirm_all');
+		var oText = document.getElementById('about_me');
+		var oSay = document.getElementById('me_infor');
+		var oTxt = document.getElementById('my_problem');
+		var oTf = oTxt.getElementsByTagName('img')[0];
+		var oSwithtxt  = false;
+ 		allBtn.onclick = function(){
+			for (var i = 0; i < allClick.length; i++) {
+				if (allBtn.checked == true) {
+					allClick[i].checked = true
+				}
+				else{
+					allClick[i].checked = false
+				}
+			};
+		};
+		oConfirm.onclick = function(){
+			if (oName.value && oAge.value && oQq.value) {
+				var loveInfor = new Array();
+		        for (var i = 0; i < allClick.length; i++) {
+			        if (allClick[i].checked == true) {
+				        loveInfor.push(allClick[i].value);
+			        };
+		        };
+		        starElast(oText,'width',177,function(){
+		    	    starElast(oText,'height',379,function(){
+		    		    oText.value ='your name:'+oName.value + '\n\n' + 'your password:'+ oAge.value +'\n\n your email:' +
+		    		    oQq.value + '\n\n youlike:' + loveInfor + '\n\n you want to say:' + '\n' + oSay.value
+		    	    });
+		        });
+		        oSwithtxt = true;
+			}
+			else{
+				alert("you didn't filled out the * option")
+			}
+			
+		};
+		oTf.onclick = function(){
+			if (oSwithtxt == true) {
+				starChange(oText,{height:6},function(){
+					starChange(oText,{width:0});
+				});
+			};
+		};
+	};
+	function welcome(){
+		setTimeout(function(){
+			var oW = document.getElementById('welcome');
+			oW.style.display = 'none';
+		},3400)
+	}
+	</script>
+</head>
+<body>
+    <div id="welcome">
+    	<img src="../images/welcome.jpg">
+    	<h1>WELCOME TO THE UNIVERSER !</h1>
+    </div>
+
+	<div id="message">
+		<img src="../images/message.gif">
+	</div>
+
+
+	<div id="form">
+		<form method="post" name="form_1">
+			<ul>
+				<li id="name_frame">
+					<h4 class="btn"> name</h4>
+					<input type="text" class="input_txt" value="">
+					<p class="error"> Error:plesae input  4-8 chars form('a-z','0-9','_')</p>
+					<p class="must_select">*</p>
+				</li>
+				<li id="age_fame">
+					<h4 class="btn"> key</h4>
+					<input type="password" class="input_txt" value="">
+					<p class="error">Error:please input 6-12 chars("a-z" or "0-9" or "_")</p>
+					<p class="must_select">*</p>
+				</li>
+				<li id="qq_frame">
+					<h4 class="btn">email</h4>
+					<input type="text" class="input_txt" value="">
+					<p class="error">Error:plesae input  true email</p>
+					<p class="must_select">*</p>
+				</li>
+				<li id="own_love">
+					<h4 class="btn">love</h4>
+					<ul id="love_select">
+						<li>
+							<h5 class="item">game</h5>
+							<input type="checkbox" name="all" class="click_own"  value="game">
+						</li>
+						<li>
+							<h5 class="item">play</h5>
+							<input type="checkbox" name="all" class="click_own" value="play">
+						</li>
+						<li>
+							<h5 class="item">music</h5>
+							<input type="checkbox" name="all" class="click_own" value="music">
+						</li>
+						<li>
+							<h5 class="item">movie</h5>
+							<input type="checkbox" name="all" class="click_own" value="movie">
+						</li>
+						<li>
+							<h5 class="item">eat</h5>
+							<input type="checkbox" name="all" class="click_own" value="eat">
+						</li>
+						<li>
+							<h5 class="item">sleep</h5>
+							<input type="checkbox" name="all" class="click_own" value="sleep">
+						</li>
+						<li>
+							<h5 class="item">walk</h5>
+							<input type="checkbox" name="all" class="click_own" value="walk">
+						</li>
+						<li>
+							<h5 class="item">swim</h5>
+							<input type="checkbox" name="all" class="click_own" value="swim">
+						</li>
+						<li>
+							<h5 class="item">hike</h5>
+							<input type="checkbox" name="all" class="click_own" value="hike">
+						</li>
+						<div id="select_all">
+							<h4>all</h4>
+							<input type="checkbox" class="click_all" id="sect_all">
+						</div>
+					</ul>
+				</li>
+				<li id="own_infor">
+					<h4 class="btn">me</h4>
+					<textarea id="me_infor"> What do you want to say?</textarea>
+				</li>
+				<li id="submit_all">
+					<input type="button" value="confirm" id="comfirm_all">
+				</li>
+				<li id="end_form">
+				<img src="../images/off.gif">
+			    </li>
+			</ul>
+		</form>
+	</div>
+
+
+	<div id="my_problem">
+        <img src="../images/open_me.gif">
+        <textarea id="about_me" readonly="readonly">
+        </textarea>
+	</div>
+
+
+	<div id="expriment_1">
+		<div id="cube_1">
+			<div class="page one">
+				<img src="../images/ente_web.jpg"/>
+			</div>
+			<div class="page two">
+				<img src="../images/460+.jpg"/>
+			</div>
+			<div class="page three">
+				<img src="../images/body_bg.jpg"/>
+			</div>
+			<div class="page four">
+				<img src="../images/song.jpg"/>
+			</div>
+			<div class="page five">
+				<img src="../images/weath.jpg"/>
+			</div>
+			<div class="page six">
+				<img src="../images/web_design.jpg"/>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="experiment_2">
+		<div id="cube_2">
+			<div class="page one">
+				<img src="../images/kawen.jpg">
+			</div>
+			<div class="page two">
+				<img src="../images/cgec.jpg">
+			</div>
+			<div class="page three">
+				<img src="../images/thumb9.jpg">
+			</div>
+			<div class="page four">
+				<img src="../images/thumb10.jpg">
+			</div>
+			<div class="page five">
+				<img src="../images/thumb1.jpg">
+			</div>
+			<div class="page six">
+				<img src="../images/image3.jpg">
+			</div>
+		</div>
+	</div>
+
+	
+	<div id="bg">
+		<div id="bg_1">
+		</div>
+		<div id="bg_2">
+		</div>
+		<div id="bg_3">
+		</div>
+		<div id="bg_4">
+		</div>
+	</div>
+</body>
+</html>
